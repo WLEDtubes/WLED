@@ -1,8 +1,7 @@
 
 #pragma once
 
-#ifndef WLED_DISABLE_ESPNOW_NEW
-
+#ifdef WLED_ESPNOW_BROADCAST
 //#include "const.h"
 
 #ifndef WLED_ESPNOW_MAX_QUEUED_MESSAGES

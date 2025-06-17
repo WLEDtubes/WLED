@@ -1,5 +1,5 @@
 
-#ifndef WLED_DISABLE_ESPNOW_NEW
+#ifdef WLED_ESPNOW_BROADCAST
 #include <Arduino.h>
 #include <atomic>
 #include <wled.h>
