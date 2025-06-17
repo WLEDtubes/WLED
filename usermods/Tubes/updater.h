@@ -94,8 +94,8 @@ class AutoUpdater {
         }
 
         // The auto-update process might break the current connection
-        _storedSSID = String(clientSSID);
-        _storedPass = String(clientPass);
+        _storedSSID = String(multiWiFi[0].clientSSID);
+        _storedPass = String(multiWiFi[0].clientPass);
         _storedAPSSID = String(apSSID);
         _storedAPPass = String(apPass);
         otaLock = false;
@@ -122,14 +122,16 @@ class AutoUpdater {
 
     void stop() {
         this->_client.stop();
-        strcpy(clientSSID, _storedSSID.c_str());
-        strcpy(clientPass, _storedPass.c_str());
+        strcpy(multiWiFi[0].clientSSID, _storedSSID.c_str());
+        strcpy(multiWiFi[0].clientPass, _storedPass.c_str());
         strcpy(apSSID, _storedAPSSID.c_str());
         strcpy(apPass, _storedAPPass.c_str());
         WiFi.softAPdisconnect(true);
         apActive = false;
         WiFi.disconnect(false, true);
+#if WLED_WATCHDOG_TIMEOUT > 0
         WLED::instance().enableWatchdog();
+#endif
         this->status = Idle;
     }
 
@@ -189,10 +191,10 @@ class AutoUpdater {
         auto s = WiFi.status();
         switch (s) {
             case WL_DISCONNECTED:
-                if (!strlen(clientSSID)) {
+                if (!strlen(multiWiFi[0].clientSSID)) {
                     log("connecting to autoupdate server");
-                    strcpy(clientSSID, this->current_version.ssid);
-                    strcpy(clientPass, this->current_version.password);
+                    strcpy(multiWiFi[0].clientSSID, this->current_version.ssid);
+                    strcpy(multiWiFi[0].clientPass, this->current_version.password);
                 }
                 return;
 
@@ -230,7 +232,9 @@ class AutoUpdater {
     }
 
     void do_request() {
+#if WLED_WATCHDOG_TIMEOUT > 0
         WLED::instance().disableWatchdog();
+#endif
         log("connecting");
         if (!this->_client.connect(this->host_name.c_str(), this->port)) { //  this->current_version.host
             abort("connect failed");
@@ -308,7 +312,9 @@ class AutoUpdater {
             return;
         };
 
+#if WLED_WATCHDOG_TIMEOUT > 0
         WLED::instance().disableWatchdog();
+#endif
         this->progress = 0;
         vTaskDelay(500);
         uint8_t buf[4096];

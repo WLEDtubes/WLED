@@ -37,9 +37,9 @@ class TubesUsermod : public Usermod {
   public:
     void setup() {
 
-      if (pinManager.isPinOk(MASTER_PIN)) {
+      if (PinManager::isPinOk(MASTER_PIN)) {
         pinMode(MASTER_PIN, INPUT_PULLUP);
-        if(pinManager.isPinOk(LEGACY_PIN)) {
+        if(PinManager::isPinOk(LEGACY_PIN)) {
           pinMode(LEGACY_PIN, INPUT_PULLUP);
         }
         if (digitalRead(MASTER_PIN) == LOW) {

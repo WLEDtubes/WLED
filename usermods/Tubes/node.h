@@ -124,12 +124,12 @@ class LightNode {
 
     void configureAP() {
 #ifdef DEFAULT_WIFI
-        strcpy(clientSSID, DEFAULT_WIFI);
-        strcpy(clientPass, DEFAULT_WIFI_PASSWORD);
+        strcpy(multiWiFi[0].clientSSID, DEFAULT_WIFI);
+        strcpy(multiWiFi[0].clientPass, DEFAULT_WIFI_PASSWORD);
 #else
         // Don't connect to any networks.
-        strcpy(clientSSID, "");
-        strcpy(clientPass, "");
+        strcpy(multiWiFi[0].clientSSID, "");
+        strcpy(multiWiFi[0].clientPass, "");
 #endif
 
         // By default, we don't want these visible.

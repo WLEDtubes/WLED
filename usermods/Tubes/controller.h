@@ -189,11 +189,11 @@ class PatternController : public MessageReceiver {
     }
 
     if (role <= CampRole)
-      strip.ablMilliampsMax = min(ABL_MILLIAMPS_DEFAULT,700);  // Really limit for batteries
+      BusManager::setMilliampsMax(min(ABL_MILLIAMPS_DEFAULT,700));  // Really limit for batteries
     else if (role <= InstallationRole)
-      strip.ablMilliampsMax = 1000;
+      BusManager::setMilliampsMax(1000);
     else
-      strip.ablMilliampsMax = 1400;
+      BusManager::setMilliampsMax(1400);
 
 
     beats.setup();
@@ -1273,8 +1273,8 @@ class PatternController : public MessageReceiver {
 
       case 'W':
         Serial.println("Clearing WiFi connection.");
-        strcpy(clientSSID, "");
-        strcpy(clientPass, "");
+        strcpy(multiWiFi[0].clientSSID, "");
+        strcpy(multiWiFi[0].clientPass, "");
         WiFi.disconnect(false, true);
         return;
 
@@ -1359,7 +1359,9 @@ class PatternController : public MessageReceiver {
         WiFi.softAPdisconnect(true);
         apActive = false;
         WiFi.disconnect(false, true);
+#if WLED_WATCHDOG_TIMEOUT > 0
         WLED::instance().enableWatchdog();
+#endif
         apBehavior = AP_BEHAVIOR_BUTTON_ONLY;
         setDebugging(false);
         acknowledge();
